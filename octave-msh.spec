@@ -1,11 +1,9 @@
 %define	pkgname msh
-%define name	octave-%{pkgname}
-%define version 1.0.2
 
 Summary:	Meshes for finite element/volume PDE Octave solvers
-Name:		%{name}
-Version:	%{version}
-Release:        2
+Name:       octave-%{pkgname}
+Version:	1.0.2
+Release:       3
 Source0:	%{pkgname}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Sciences/Mathematics
@@ -13,8 +11,8 @@ Url:		http://octave.sourceforge.net/msh/
 Conflicts:	octave-forge <= 20090607
 Requires:	octave >= 3.0.0, octave-splines >= 0.0.0
 BuildRequires:  octave-devel >= 3.0.0
-BuildRequires:  mesagl-devel
-BuildRequires:  mesaglu-devel
+BuildRequires:  pkgconfig(gl)
+BuildRequires:  pkgconfig(glu)
 BuildArch:	noarch
 
 %description
@@ -45,15 +43,5 @@ mv %{pkgname}-%{version}/DESCRIPTION .
 %{_bindir}/test -x %{_bindir}/octave && %{_bindir}/octave -q -H --no-site-file --eval "pkg('rebuild');" || :
 
 %files
-%defattr(-,root,root)
 %doc COPYING DESCRIPTION
 %{_datadir}/octave/packages/%{pkgname}-%{version}
-
-
-
-%changelog
-* Mon Aug 22 2011 Lev Givon <lev@mandriva.org> 1.0.2-1mdv2012.0
-+ Revision: 696175
-- import octave-msh
-
-
