@@ -1,43 +1,40 @@
-%define	pkgname msh
+%define octpkg msh
+
+# Exclude .oct files from provides
+%define __provides_exclude_from ^%{octpkglibdir}/.*.oct$
 
 Summary:	Meshes for finite element/volume PDE Octave solvers
-Name:       octave-%{pkgname}
-Version:	1.0.2
-Release:        5
-Source0:	%{pkgname}-%{version}.tar.gz
+Name:		octave-%{octpkg}
+Version:	1.0.10
+Release:	1
+Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Sciences/Mathematics
-Url:		http://octave.sourceforge.net/msh/
-Conflicts:	octave-forge <= 20090607
-Requires:	octave >= 3.0.0, octave-splines >= 0.0.0
-BuildRequires:  octave-devel >= 3.0.0
-BuildRequires:  pkgconfig(gl)
-BuildRequires:  pkgconfig(glu)
-BuildArch:	noarch
-Requires:       octave(api) = %{octave_api}
+Url:		https://octave.sourceforge.io/%{octpkg}/
+
+BuildRequires:	octave-devel >= 3.0
+
+Requires:	octave(api) = %{octave_api}
+Requires:	octave-splines
+
 Requires(post): octave
 Requires(postun): octave
 
 %description
-Create and manage triangular and tetrahedral meshes for finite element
-or finite volume PDE solvers in Octave. Use a mesh data structure
-compatible with PDEtool. Rely on gmsh for unstructured mesh
-generation.
+Create and manage triangular and tetrahedral meshes for Finite Element or
+Finite Volume PDE solvers in Octave. Use a mesh data structure compatible
+with PDEtool. Rely on gmsh for unstructured mesh generation.
+
+This package is part of external Octave-Forge collection.
 
 %prep
-%setup -q -c %{pkgname}-%{version}
-cp %{SOURCE0} .
+%setup -qcT
+
+%build
+%octave_pkg_build -T
 
 %install
-%__install -m 755 -d %{buildroot}%{_datadir}/octave/packages/
-export OCT_PREFIX=%{buildroot}%{_datadir}/octave/packages
-octave -q --eval "pkg prefix $OCT_PREFIX; pkg install -verbose -nodeps -local %{pkgname}-%{version}.tar.gz"
-
-tar zxf %{SOURCE0} 
-mv %{pkgname}-%{version}/COPYING .
-mv %{pkgname}-%{version}/DESCRIPTION .
-
-%clean
+%octave_pkg_install
 
 %post
 %octave_cmd pkg rebuild
@@ -49,5 +46,10 @@ mv %{pkgname}-%{version}/DESCRIPTION .
 %octave_cmd pkg rebuild
 
 %files
-%doc COPYING DESCRIPTION
-%{_datadir}/octave/packages/%{pkgname}-%{version}
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+%dir %{octpkgdir}
+%{octpkgdir}/*
+%doc %{octpkg}/NEWS
+%doc %{octpkg}/COPYING
+
