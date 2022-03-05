@@ -1,21 +1,30 @@
 %define octpkg msh
 
-# Exclude .oct files from provides
-%define __provides_exclude_from ^%{octpkglibdir}/.*.oct$
-
 Summary:	Meshes for finite element/volume PDE Octave solvers
 Name:		octave-%{octpkg}
 Version:	1.0.10
 Release:	1
 Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
+# https://savannah.gnu.org/bugs/index.php?51970
+Patch0:		continuation-lines.patch
+# https://savannah.gnu.org/bugs/index.php?59613
+Patch1:		build-against-octave-6.patch
+# https://savannah.gnu.org/bugs/?41724
+Patch2:		configure-script-source.patch
+
 License:	GPLv2+
 Group:		Sciences/Mathematics
 Url:		https://octave.sourceforge.io/%{octpkg}/
 
 BuildRequires:	octave-devel >= 3.0
+BuildRequires:	octave-splines
+BuildRequires:	pkgconfig(dolfin)
+# unpackaged
+#BuildRequires:	pkgconfig(gmsh)
 
 Requires:	octave(api) = %{octave_api}
 Requires:	octave-splines
+Requires:	awk
 
 Requires(post): octave
 Requires(postun): octave
@@ -27,14 +36,31 @@ with PDEtool. Rely on gmsh for unstructured mesh generation.
 
 This package is part of external Octave-Forge collection.
 
+%files
+%license COPYING
+%doc NEWS
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+%dir %{octpkgdir}
+%{octpkgdir}/*
+
+#---------------------------------------------------------------------------
+
 %prep
-%setup -qcT
+%autosetup -p1 -n %{octpkg}
+
+# remove backup files
+find . -name \*~ -delete
 
 %build
-%octave_pkg_build -T
+%set_build_flags
+%octave_pkg_build
 
 %install
 %octave_pkg_install
+
+%check
+%octave_pkg_check
 
 %post
 %octave_cmd pkg rebuild
@@ -44,12 +70,4 @@ This package is part of external Octave-Forge collection.
 
 %postun
 %octave_cmd pkg rebuild
-
-%files
-%dir %{octpkglibdir}
-%{octpkglibdir}/*
-%dir %{octpkgdir}
-%{octpkgdir}/*
-%doc %{octpkg}/NEWS
-%doc %{octpkg}/COPYING
 

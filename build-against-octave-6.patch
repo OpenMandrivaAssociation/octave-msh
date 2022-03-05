@@ -1,0 +1,67 @@
+Description: Fix FTBFS against Octave 6.1
+ Replace calls to the deprecated function tmpnam with tempname.
+Author: Rafael Laboissière <rafael@debian.org>
+Bug-Debian: https://bugs.debian.org/976201
+Forwarded: no
+Last-Update: 2020-12-03
+
+--- octave-msh-1.0.10.orig/inst/msh2m_gmsh.m
++++ octave-msh-1.0.10/inst/msh2m_gmsh.m
+@@ -75,7 +75,7 @@ function [mesh, gmsh_output] = msh2m_gms
+     printf("Generating mesh...\n");
+   endif
+ 
+-  msh_name = strcat (tmpnam (), ".msh");
++  msh_name = strcat (tempname (), ".msh");
+   fclose (fopen (msh_name, "w"));
+ 
+   [status, gmsh_output] = system (["gmsh -format msh -2 -o " msh_name optstring " " geometry ".geo 2>&1 "]);
+@@ -83,7 +83,7 @@ function [mesh, gmsh_output] = msh2m_gms
+     error ("msh2m_gmsh: the gmesh subprocess exited abnormally");
+   endif
+ 
+-  fname = tmpnam ();
++  fname = tempname ();
+   fclose (fopen (strcat (fname, "_e.txt"), "w"));
+   e_filename =  canonicalize_file_name (strcat (fname, "_e.txt"));
+ 
+@@ -171,7 +171,7 @@ endfunction
+ %! assert(nnodest,nnodesp);
+ 
+ %!demo
+-%! name = [tmpnam ".geo"];
++%! name = [tempname ".geo"];
+ %! fid = fopen (name, "w");
+ %! fputs (fid, "Point(1) = {0, 0, 0, .1};\n");
+ %! fputs (fid, "Point(2) = {1, 0, 0, .1};\n");
+--- octave-msh-1.0.10.orig/inst/msh2m_submesh.m
++++ octave-msh-1.0.10/inst/msh2m_submesh.m
+@@ -111,7 +111,7 @@ endfunction
+ %! assert(elementlist,el);
+ 
+ %!demo
+-%! name = [tmpnam ".geo"];
++%! name = [tempname ".geo"];
+ %! fid = fopen (name, "w");
+ %! fputs (fid, "Point(1) = {0, 0, 0, .1};\n");
+ %! fputs (fid, "Point(2) = {1, 0, 0, .1};\n");
+--- octave-msh-1.0.10.orig/inst/msh3m_gmsh.m
++++ octave-msh-1.0.10/inst/msh3m_gmsh.m
+@@ -77,7 +77,7 @@ function [mesh, gmsh_output] = msh3m_gms
+     printf("Generating mesh...\n");
+   endif
+ 
+-  msh_name = strcat (tmpnam (), ".msh");
++  msh_name = strcat (tempname (), ".msh");
+   fclose (fopen (msh_name, "w"));
+ 
+   [status, gmsh_output] = system (["gmsh -format msh -3 -o " msh_name optstring " " geometry ".geo 2>&1"]);
+@@ -89,7 +89,7 @@ function [mesh, gmsh_output] = msh3m_gms
+     printf("Processing gmsh data...\n");
+   endif
+ 
+-  fname = tmpnam ();
++  fname = tempname ();
+   fclose (fopen (strcat (fname, "_e.txt"), "w"));
+   e_filename =  canonicalize_file_name (strcat (fname, "_e.txt"));
+ 
