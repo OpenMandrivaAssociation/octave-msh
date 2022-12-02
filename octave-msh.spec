@@ -4,7 +4,7 @@ Summary:	Meshes for finite element/volume PDE Octave solvers
 Name:		octave-%{octpkg}
 Version:	1.0.10
 Release:	1
-Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
+Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 # https://savannah.gnu.org/bugs/index.php?51970
 Patch0:		continuation-lines.patch
 # https://savannah.gnu.org/bugs/index.php?59613
@@ -14,7 +14,7 @@ Patch2:		configure-script-source.patch
 
 License:	GPLv2+
 Group:		Sciences/Mathematics
-Url:		https://octave.sourceforge.io/%{octpkg}/
+Url:		https://packages.octave.org/%{octpkg}/
 
 BuildRequires:	octave-devel >= 3.0
 BuildRequires:	octave-splines
@@ -33,8 +33,6 @@ Requires(postun): octave
 Create and manage triangular and tetrahedral meshes for Finite Element or
 Finite Volume PDE solvers in Octave. Use a mesh data structure compatible
 with PDEtool. Rely on gmsh for unstructured mesh generation.
-
-This package is part of external Octave-Forge collection.
 
 %files
 %license COPYING
