@@ -1,54 +1,65 @@
-%define octpkg msh
+%global octpkg msh
+
+%bcond_with	dolfin
+
+%if %{without dolfin}
+%global debug_package %{nil}
+%endif
 
 Summary:	Meshes for finite element/volume PDE Octave solvers
-Name:		octave-%{octpkg}
-Version:	1.0.10
+Name:		octave-msh
+Version:	1.0.12
 Release:	1
-Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
-# https://savannah.gnu.org/bugs/index.php?51970
-Patch0:		continuation-lines.patch
-# https://savannah.gnu.org/bugs/index.php?59613
-Patch1:		build-against-octave-6.patch
-# https://savannah.gnu.org/bugs/?41724
-Patch2:		configure-script-source.patch
-
 License:	GPLv2+
 Group:		Sciences/Mathematics
-Url:		https://packages.octave.org/%{octpkg}/
+#Url:		https://packages.octave.org/msh/
+Url:		https://github.com/carlodefalco/msh
+Source0:	https://github.com/carlodefalco/msh/archive/v%{version}/msh-%{version}.tar.gz
+# https://savannah.gnu.org/bugs/index.php?51970
+Patch0:		continuation-lines.patch
 
-BuildRequires:	octave-devel >= 3.0
-BuildRequires:	octave-splines
+BuildRequires:  octave-devel >= 3.0.0
+BuildRequires:  octave-splines
+%if %{with dolfin}
 BuildRequires:	pkgconfig(dolfin)
-# unpackaged
-#BuildRequires:	pkgconfig(gmsh)
+%endif
 
 Requires:	octave(api) = %{octave_api}
-Requires:	octave-splines
-Requires:	awk
+Requires:  	octave-splines
+# unpackaged
+#Requires:	gmsh
 
 Requires(post): octave
 Requires(postun): octave
 
 %description
-Create and manage triangular and tetrahedral meshes for Finite Element or
-Finite Volume PDE solvers in Octave. Use a mesh data structure compatible
-with PDEtool. Rely on gmsh for unstructured mesh generation.
+Create and manage triangular and tetrahedral meshes for Finite
+Element or Finite Volume PDE solvers. Use a mesh data structure
+compatible with PDEtool. Rely on gmsh for unstructured mesh
+generation.
 
 %files
 %license COPYING
 %doc NEWS
-%dir %{octpkglibdir}
-%{octpkglibdir}/*
 %dir %{octpkgdir}
 %{octpkgdir}/*
+%if %{with dolfin}
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+%endif
 
 #---------------------------------------------------------------------------
 
 %prep
-%autosetup -p1 -n %{octpkg}
+%autosetup -p1 -n %{octpkg}-%{version}
 
-# remove backup files
-find . -name \*~ -delete
+%if %{with dolfin}
+mv cruft/src .
+pushd src
+autoreconf -fiv 
+popd
+%endif
+rm -fr cruft
 
 %build
 %set_build_flags
