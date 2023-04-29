@@ -9,7 +9,7 @@
 Summary:	Meshes for finite element/volume PDE Octave solvers
 Name:		octave-msh
 Version:	1.0.12
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Sciences/Mathematics
 #Url:		https://packages.octave.org/msh/
@@ -17,17 +17,23 @@ Url:		https://github.com/carlodefalco/msh
 Source0:	https://github.com/carlodefalco/msh/archive/v%{version}/msh-%{version}.tar.gz
 # https://savannah.gnu.org/bugs/index.php?51970
 Patch0:		continuation-lines.patch
+# (debian)
+%if %{without dolfin}
+Patch1:		skip-dolfin-tests.patch
+%endif
 
 BuildRequires:  octave-devel >= 3.0.0
 BuildRequires:  octave-splines
 %if %{with dolfin}
 BuildRequires:	pkgconfig(dolfin)
 %endif
+# for tests
+BuildRequires:  gmsh
 
 Requires:	octave(api) = %{octave_api}
 Requires:  	octave-splines
 # unpackaged
-#Requires:	gmsh
+Suggests:	gmsh
 
 Requires(post): octave
 Requires(postun): octave
@@ -55,14 +61,16 @@ generation.
 
 %if %{with dolfin}
 mv cruft/src .
-pushd src
-autoreconf -fiv 
-popd
 %endif
 rm -fr cruft
 
 %build
 %set_build_flags
+%if %{with dolfin}
+pushd src
+autoreconf -fiv
+popd
+%endif
 %octave_pkg_build
 
 %install
