@@ -1,0 +1,38 @@
+Description: Skip the unit tests related to the dolfin library
+Author: Rafael Laboissière <rafael@debian.org>
+Forwarded: not-needed
+Last-Update: 2017-09-09
+
+--- octave-msh-1.0.10.orig/cruft/src/mshm_dolfin_read.cc
++++ octave-msh-1.0.10/cruft/src/mshm_dolfin_read.cc
+@@ -148,7 +148,7 @@ with matrix fields (p,e,t).\n\
+ 
+ 
+ /*
+-%!test
++%!xtest
+ %! x = y = z = linspace (0, 1, 2);
+ %! msh = msh3m_structured_mesh (x, y, z, 1, [1 : 6]);
+ %! mshm_dolfin_write (msh, "msh");
+--- octave-msh-1.0.10.orig/cruft/src/mshm_dolfin_write.cc
++++ octave-msh-1.0.10/cruft/src/mshm_dolfin_write.cc
+@@ -318,7 +318,7 @@ with matrix fields (p,e,t).\n\
+ }
+ 
+ /*
+-%!test
++%!xtest
+ %! x = y = z = linspace (0, 1, 2);
+ %! msh = msh3m_structured_mesh (x, y, z, 1, [1 : 6]);
+ %! mshm_dolfin_write (msh, "msh");
+--- octave-msh-1.0.10.orig/cruft/src/mshm_refine.cc
++++ octave-msh-1.0.10/cruft/src/mshm_refine.cc
+@@ -434,7 +434,7 @@ the same structure as @var{mesh}\n\
+ %! title ('uniformly refined mesh');
+ */
+ /*
+-%!test
++%!xtest
+ %! x = y = linspace (0, 1, 2);
+ %! msh = msh2m_structured_mesh (x, y, 1, [1 : 4]);
+ %! msh.t (4, 2) = 2;
