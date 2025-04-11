@@ -9,7 +9,7 @@
 Summary:	Meshes for finite element/volume PDE Octave solvers
 Name:		octave-msh
 Version:	1.0.12
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		Sciences/Mathematics
 #Url:		https://packages.octave.org/msh/
